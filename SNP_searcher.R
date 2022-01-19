@@ -56,7 +56,7 @@ export_VCF()
 
 # 3. For VCF file, uploaded to http://grch37.ensembl.org/Tools/VEP
 # Create a New job, and paste the data in VCF file
-# After the job is done, download the result in .txt format
+# After the job is done, download the result in .txt format and renamed it as "Yang2021_CSF_Marker_supp.txt"
 
 
 import_VEP <- function(VEP_result = "Yang2021_CSF_Marker_supp.txt")
