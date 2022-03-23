@@ -2,7 +2,7 @@
 # the input dat can be either a data.frame containing SNP column
 # or just SNP list
   
-mr_phenoscanner <- function(dat = exposure_MAP)
+snp_phenoscanner <- function(dat = exposure_MAP)
 {
   if(is.data.frame(dat))
   {
