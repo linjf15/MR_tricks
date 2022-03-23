@@ -3,7 +3,7 @@
 # The function provides two options for database, one for dbsnp, another for ensembl. I prefer dbsnp and add additional function.
 # Also, build is considered
 
-get_rsID_from_chrpos <- function(dat = Yang2021_CSF_Marker[31:40,],
+get_rsID_from_chrpos <- function(dat,
                                 col_chr = "chr",
                                 col_pos = "start",
                                 col_ref_allele = "refAllele",
