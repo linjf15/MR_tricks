@@ -29,12 +29,14 @@ snp_add_eaf <- function(dat, build = "37", pop = "EUR")
     if("effect_allele.exposure" %in% names(dat))
     {
       dat_i$eaf.exposure <- ifelse(dat_i$effect_allele.exposure == allele,af,1-af)
+      name_output <- unique(c(names(dat), "eaf.exposure"))
     }
     if("effect_allele" %in% names(dat))
     {
       dat_i$eaf <- ifelse(dat_i$effect_allele == allele,af,1-af)
+      name_output <- unique(c(names(dat), "eaf"))
     }
-    dat_i[names(dat)]
+    dat_i[name_output]
   })
   
   return(do.call(rbind, res_tab))
