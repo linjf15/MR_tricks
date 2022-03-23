@@ -1,7 +1,7 @@
 snp_add_eaf <- function(dat, build = "37", pop = "EUR")
 {
   stopifnot(build %in% c("37","38"))
-  stopifnot("SNP" %in% names(exposure_MAP))
+  stopifnot("SNP" %in% names(dat))
   
   # Create and get a url
   server <- ifelse(build == "37","http://grch37.rest.ensembl.org","http://rest.ensembl.org")
