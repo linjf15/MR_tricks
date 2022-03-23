@@ -1,9 +1,9 @@
-snp_replace_proxy <- function(dat, snp_proxy, build = "37", pop = "EUR")
+snp_replace_proxy <- function(dat, snp_proxy, type = "exposure", build = "37", pop = "EUR")
 {
   stopifnot(nrow(dat) == 1)
   stopifnot("SNP" %in% names(dat))
-  stopifnot("effect_allele.exposure" %in% names(dat))
-  stopifnot("eaf.exposure" %in% names(dat))
+  stopifnot(paste0("effect_allele.",type) %in% names(dat))
+  stopifnot(paste0("eaf.",type) %in% names(dat))
   stopifnot(build %in% c("37","38"))
   
   # Create and get a url
@@ -28,18 +28,18 @@ snp_replace_proxy <- function(dat, snp_proxy, build = "37", pop = "EUR")
   alt_allele <- res_pop[2,"allele"][[1]]
   ref_af <- res_pop[1,"frequency"][[1]]
   
-  index <- ifelse(
-    (dat$eaf.exposure<0.5&ref_af<0.5)|(dat$eaf.exposure>0.5&ref_af>0.5),
+index <- ifelse(
+    (dat[[paste0("eaf.",type)]]<0.5&ref_af<0.5)|(dat[[paste0("eaf.",type)]]>0.5&ref_af>0.5),
     1,2
   )
 
-  dat$SNP <- snp_proxy
-  dat$effect_allele.exposure <- c(ref_allele, alt_allele)[index]
-  dat$eaf.exposure <- abs(1 - index + ref_af)
+  dat[["SNP"]] <- snp_proxy
+  dat[[paste0("effect_allele.",type)]] <- c(ref_allele, alt_allele)[index]
+  dat[[paste0("eaf.",type)]] <- abs(1 - index + ref_af)
     
-  if("other_allele.exposure" %in% names(dat))
+  if(paste0("other_allele.",type) %in% names(dat))
   {
-    dat$other_allele.exposure <- c(ref_allele, alt_allele)[3 - index]
+    dat[[paste0("other_allele.",type)]] <- c(ref_allele, alt_allele)[3 - index]
   }
 
   return(dat)
