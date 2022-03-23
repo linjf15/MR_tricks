@@ -1,10 +1,10 @@
-find_proxy <- function(snp = "rs10001", r2_threshold = 0.8, build = "37")
+find_proxy <- function(snp = "rs10001", r2_threshold = 0.8, build = "37", pop = "EUR")
 {
   stopifnot(build %in% c("37","38"))
   
   # Create and get a url
   server <- ifelse(build == "37","http://grch37.rest.ensembl.org","http://rest.ensembl.org")
-  ext <- paste0("/ld/human/",snp,"/1000GENOMES:phase_3:EUR")
+  ext <- paste0("/ld/human/",snp,"/1000GENOMES:phase_3:", pop)
   url <- paste(server, ext, sep = "")
   print(paste0("searching proxies for ",snp," ......"))
   res <- httr::GET(url, httr::content_type("application/json"))
