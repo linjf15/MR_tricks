@@ -72,12 +72,15 @@ harmonise_data_local <- function(exposure_dat, outcome_dat, r2_thershold = 0.8, 
         }
         
         # Harmonizing data based on the proxy-outcome GWAS
-        dat_supp_i <- harmonise_data(exposure_dat_i, outcome_dat_i)
-        if(dat_supp_i$mr_keep=="TRUE")
+        if(nrow(dat_supp_i)==0) next
+        else
         {
-          dat_supp_i$data_source.exposure <- proxy_snp_i
-          harmonised_dat <- rbind(harmonised_dat, dat_supp_i)
-          break
+          if(dat_supp_i$mr_keep=="TRUE")
+          {
+            dat_supp_i$data_source.exposure <- proxy_snp_i
+            harmonised_dat <- rbind(harmonised_dat, dat_supp_i)
+            break
+          }
         }
       }
     }
