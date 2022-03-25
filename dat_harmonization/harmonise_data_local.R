@@ -72,6 +72,7 @@ harmonise_data_local <- function(exposure_dat, outcome_dat, r2_thershold = 0.8, 
         }
         
         # Harmonizing data based on the proxy-outcome GWAS
+        dat_supp_i <- harmonise_data(exposure_dat_i, outcome_dat_i)
         if(nrow(dat_supp_i)==0) next
         else
         {
