@@ -1,9 +1,8 @@
-### several functions are required for harmonizing data
-### TwoSampleMR package
-### find_proxy
-### snp_replace_proxy
+### All the SNPs in the output from the exposure data will be queried against the requested outcomes
+### Locally or in remote database using API
+### several functions are required for harmonizing data: TwoSampleMR package, find_proxy, snp_replace_proxy
 
-harmonise_data_local <- function(exposure_dat, outcome_dat, r2_thershold = 0.8, build = "37", pop = "EUR")
+harmonise_data_modifed <- function(exposure_dat, outcome_dat, r2_thershold = 0.8, build = "37", pop = "EUR")
 {
   stopifnot(build %in% c("37","38"))
   
