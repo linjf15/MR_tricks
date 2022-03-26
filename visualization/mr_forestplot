@@ -1,0 +1,73 @@
+generate_table_for_forestplot <- function(dat,
+                                          number_comparisons = 859)
+{
+  dat %>% 
+    dplyr::rename(Odds = or,Low = or_lci95,High = or_uci95) %>% 
+    dplyr::group_by(exposure) %>% 
+    dplyr::mutate(p.adjust = p.adjust(pval,method="fdr",n=number_comparisons)) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::mutate(ci = sprintf("%.2f (%.2f, %.2f)",Odds,Low,High),
+                  pval = as.numeric(pval))  %>% 
+    dplyr::mutate(ci = ifelse(is.na(pval),NA,ci)) %>% 
+    dplyr::mutate(p.adjust = ifelse(p.adjust<0.001,
+                                    scales::scientific(p.adjust,digits = 3),
+                                    sprintf("%.3f",p.adjust)),
+                  pval = ifelse(pval<0.001,scales::scientific(pval,digits = 3),sprintf("%.3f",pval)))
+}
+
+
+add_title_for_table <- function(df)
+{
+  tibble(
+    exposure="Protein",
+    b = NA, se = NA, lo_ci = NA, up_ci = NA,
+    Odds = NA, Low = NA, High =NA, ci="OR (95%CI)",
+    pval="P",p.adjust="Adjusted P",qval="Q",
+    meta = "Data",cohort = "Cohort") %>% 
+    select(all_of(names(df))) %>% 
+    rbind(df)
+}
+
+table <- res_Plasma_Lin_MS_summary %>% 
+  filter(exposure == "P19971") %>% 
+  mutate(cohort = get_cohort_from_number(cohort)) %>% 
+  generate_table_for_forestplot() %>% 
+  add_title_for_table()
+
+n_xlab_space = 30
+
+forestplot(labeltext = as.matrix(table[,c("exposure","cohort","ci","pval")]),
+           mean=table$Odds,lower = table$Low,upper=table$High, 
+           align = "l",
+           is.summary = c(T,rep(c(F,F,F,T),12)),
+           graph.pos = 3,
+           hrzl_lines = list("2" = gpar(lty = 1,col = "black")),
+           # clip
+           xlab = paste0(c("Lower ←  → Higher",paste0(rep("",n_xlab_space),collapse = " ")),collapse = ""),
+           zero = 1, #zero line
+           graphwidth = unit(5,'cm'), #width of graph, cm level is appropriate
+           colgap = unit(5,'mm'), #gap between columns
+           lineheight = unit(10,'mm'), #gap between rows, or height of each row
+           # line.margin
+           col=fpColors(box='black',lines = 'black',zero = 'lightgray'),
+           #col=fpColors(box=c('#50A7A8','#D4E9E3'),lines = 'black',zero = 'lightgray'),
+           txt_gp=fpTxtGp(label=gpar(#fontfamily="serif",
+             cex=0.85),ticks=gpar(cex=0.85),xlab=gpar(cex = 0.85)),
+           xlog = T,
+           xticks = c(0.5,1,8),
+           clip = c(0.5, 8),
+           xticks.digits = 2,
+           # grid
+           lwd.xaxis = 1, #line width of x axis
+           lwd.zero = 1, #line width of zero
+           lwd.ci = 1, # line width of CI
+           lty.ci = 1, # line type of CI
+           ci.vertices = F,
+           # ci.vertices.height
+           boxsize = 0.15, #box size
+           mar = unit(rep(0, times = 4), "mm"), # d from picture to border
+           #title = "",
+           new_page = T,
+           fn.ci_norm = fpDrawNormalCI, # types of CI,normal=square
+           # shapes_gp
+)
