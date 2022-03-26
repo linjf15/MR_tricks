@@ -25,6 +25,7 @@ harmonise_data_local <- function(exposure_dat, outcome_dat, r2_thershold = 0.8, 
   }
   harmonised_dat <- harmonise_data(exposure_dat, outcome_dat)
   harmonised_dat <- harmonised_dat[harmonised_dat$mr_keep == "TRUE",]
+  harmonised_dat$data_source.exposure <- "input"
   
   # Get a list of unavailable snps in the outcome GWAS
   all_snp <- snp_in_exposure_dat[grepl("rs\\d+", snp_in_exposure_dat)]
