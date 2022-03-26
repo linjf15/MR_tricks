@@ -1,3 +1,6 @@
+### This is the prototype
+### Cohort names should be replaced accordingly
+
 get_cohort_from_number <- function(x){
   cohorts <- lapply(x, function(i)
     {
