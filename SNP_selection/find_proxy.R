@@ -21,5 +21,8 @@ find_proxy <- function(snp = "rs10001", r2_threshold = 0.8, build = "37", pop = 
   snp_r2 <- proxy_df$r2[proxy_df$r2>r2_threshold]
   snp_v <- proxy_df$variation2[proxy_df$r2>r2_threshold]
   
-  return(snp_v[order(snp_r2, decreasing=T)])
+  # If the query returns nothing, the output would be NULL
+  # Else, returning a ordered vectors of proxy SNPs
+  if(is.null(snp_v)) return(NULL)
+  else return(snp_v[order(snp_r2, decreasing=T)])
 }
