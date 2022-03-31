@@ -8,6 +8,7 @@
 * MR-GENIUS: https://github.com/bluosun/MR-GENIUS
 * MR-AID: https://github.com/yuanzhongshang/MRAID
 * MR-TRYX: https://github.com/explodecomputer/tryx
+* NLMR: https://github.com/jrs95/nlmr
 
 # Blood/ Plasma/ Serum
 ## Proteome
