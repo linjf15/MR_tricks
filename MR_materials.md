@@ -9,6 +9,7 @@
 * MR-AID: https://github.com/yuanzhongshang/MRAID
 * MR-TRYX: https://github.com/explodecomputer/tryx
 * NLMR: https://github.com/jrs95/nlmr
+* BayesMR: https://github.com/igbucur/BayesMR
 
 # Blood/ Plasma/ Serum
 ## Proteome
