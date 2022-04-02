@@ -10,6 +10,7 @@
 * MR-TRYX: https://github.com/explodecomputer/tryx
 * NLMR: https://github.com/jrs95/nlmr
 * BayesMR: https://github.com/igbucur/BayesMR
+* CFMR: https://github.com/william-denault/CFMR
 
 # Blood/ Plasma/ Serum
 ## Proteome
