@@ -9,6 +9,7 @@
 * MR-AID: https://github.com/yuanzhongshang/MRAID
 * MR-TRYX: https://github.com/explodecomputer/tryx
 * NLMR: https://github.com/jrs95/nlmr
+* MVMR: https://github.com/WSpiller/MVMR
 * BayesMR: https://github.com/igbucur/BayesMR
 * CFMR: https://github.com/william-denault/CFMR
 
