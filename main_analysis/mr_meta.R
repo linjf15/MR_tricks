@@ -6,7 +6,7 @@ mr_meta <- function(dat_list,
   requireNamespace("metafor", quietly = TRUE)
   stopifnot(output %in% c("meta","summary"))
   
-  mr_method_list <- get_name_from_abbr(mr_method = mr_method)
+  mr_method_list <- get_method_from_abbr(mr_method = mr_method)
   
   dat_method_filtering <- lapply(1:length(dat_list),
     function(i) {
