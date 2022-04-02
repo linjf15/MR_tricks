@@ -10,9 +10,11 @@ During the study based on Mendelian Randomization, several functions were propos
 * how to harmonize if direct removal is not allowed and proxy is required: `snp_replace_proxy`, `harmonise_data_modified`
 
 ## Main analysis for Mendelian Randomization
-* how to conduct meta-analysis to pool estimates from different cohorts: `mr_meta`
+* `mr_meta` is helpful conduct meta-analysis to pool estimates from different cohorts
+* `mr_modified` is alternative function to `mr` in TwoSampleMR package, since the mr-raps cannot not be conducted in the original function
 * `get_cohort_from_number` transforms a number into a name of cohort
-* `get_name_from_abbr` transforms an abbreviation version of MR method into a full name
+* `get_method_from_abbr` transforms an abbreviation version of MR method into a full name
+* `get_protein_from_uniprot` transforms a UniProt ID to full name of protein, with UniProtRefPanel.xlsx as the reference panel
 
 ## More functions are under developing...
 * data visualization: volcano plot, forest plot...
