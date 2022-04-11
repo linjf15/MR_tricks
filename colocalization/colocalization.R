@@ -1,92 +1,151 @@
-## This script runs colocalisation analysis between eQTL data for genes near ACE
-## with schizophrenia GWAS data
+## This script runs colocalisation analysis
 
-## Input files:
-## 1. eQTL data in SMR query format (provided in the smr_query_files folder)
-## 2. GWAS data gcta_format
-## 3. List of genes for which analysis needs to be done (ENSG_IDs_for_genes_near_ACE.txt)
-
-## Packages required
-library(coloc)
-
-##################### 1. EXTRACT EQTL SUMMARY DATA FOR GENES OF INTEREST USING SMR  #######
-## NOTE: eqtl summary files are provided in the smr_query_files folder and this step can be skipped
-##########################################################################################
-# SMR command
-system("smr --beqtl-summary myeqtl_data --query 1 --gene gene_id --out myquery")
-# where myeqtl_data is the summary-level data from a eQTL study in smr format which can be
-# downloaded from https://cnsgenomics.com/software/smr/#DataResource;
-# --query sets the p-value threshold. To extract all SNPs use --query 1;
-# --gene is the gene_id as provided in the eqtl data. For eQTLGen data this is the ensembl ID
-##########################################################################################
-
-
-
-##################### 1. COLOC ANALYSIS OF EQTL AND GWAS DATA#############################
-## The script assumes that data are in the following format:
-## GWAS summary data is in gcta format (SNP, A1, A2, frq, b, se, p, N)
-## eQTL summary data is in SMR format (SNP, Chr, BP, A1, A2, Freq, Probe, Probe_Chr, Probe_bp, Gene, Orientation, b, SE, p)
-##########################################################################################
-
-# Read in the list of enselmbl ids for genes to be analysed
-genelist=read.table("./ENSG_IDs_for_genes_near_ACE.txt", header=T, stringsAsFactor=F, sep="\t")
-gene_symbol=genelist$Gene.name
-gene_ENSG_ID=genelist$Gene.stable.ID
-
-# Parameters for schizophrenia data
-path1="./"
-file1="gwas_summary_data"
-type1="cc" ## Type of trait - cc for case/ctrl
-s1= 0.3862 # proportion of cases. For SCZ data this is 0.3862 (40,675 cases, 64,643 controls)
-gwas_data=read.table(paste(path1,file1,sep=""), header=T, stringsAsFactor=F)
-
-# Results will be save in this object
-coloc_exp_results=c()
-
-# Perform coloc analysis between eqtl and scz data for each gene
-for (x in 1:nrow(genelist)) {
-    g=gene_symbol[x]
-    path2="./smr_query_files/"
-    file2=paste(gene_ENSG_ID[x],"_",gene_symbol[x],"_eqtlgen_summary.txt", sep="")
-    type2="quant" # quantitative trait
-
-    # Read in eqtl
-    d2=read.table(paste(path2,file2,sep=""), header=T, stringsAsFactor=F)
-    d1=gwas_data
-    
-    ## Extract SNPs present in both datasets
-    snps = intersect(d1$SNP,d2$SNP)
-
-    ## Harmonise SNP order in the 2 datasets
-    rownames(d1)=d1$SNP
-    rownames(d2)=d2$SNP
-    d1=d1[snps,]
-    d2=d2[snps,]
-
-    # assign paramter values and create list of input parameters for dataset 1
-    MAF1=ifelse(d1$frq<0.5,d1$frq, 1-d1$frq)
-    pvalues1=d1$p
-    beta1=d1$b
-    varbeta1=d1$se^2
-    N1=d1$N
-    list1=list("snps"=snps,"MAF"=MAF1,"beta"=beta1,"varbeta"=varbeta1,"pvalues"=pvalues1,"N"=N1, "type"=type1, "s"=s1)
-
-    # assign paramter values and create list of input parameters for dataset 2
-    MAF2=ifelse(d2$Freq<0.5,d2$Freq, 1-d2$Freq)
-    pvalues2=d2$p
-    beta2=d2$b
-    varbeta2=d2$SE^2
-    N2=31684
-    ## sdY estimation done by coloc function if unknown
-    list2=list("snps"=snps,"MAF"=MAF2,"beta"=beta2,"varbeta"=varbeta2,"pvalues"=pvalues2,"N"=N2, "type"=type2)
-
-    res=coloc.abf(list1,list2, p1 = 1e-04, p2 = 1e-04,p12 = 1e-05)
-
-    # save coloc output to results object
-    coloc_exp_results$gene[x]=gene_symbol[x]
-    coloc_exp_results$PP.H4.abf[x]=res$summary["PP.H4.abf"]
-
+coloc_test <- function(exposure_dat,
+                       outcome_dat,
+                       type_exposure = "quant",
+                       col_pvalues_exposure = "pval",
+                       col_N_exposure = "samplesize",
+                       col_MAF_exposure = "maf",
+                       col_beta_exposure = "beta",
+                       col_se_exposure = "se",
+                       col_snp_exposure = "SNP",
+                       sd_exposure = NA,
+                       type_outcome = "cc",
+                       col_pvalues_outcome = "pval.outcome",
+                       col_N_outcome = "samplesize.outcome",
+                       col_MAF_outcome = NA,
+                       col_beta_outcome = "beta.outcome",
+                       col_se_outcome = "se.outcome",
+                       col_snp_outcome = "SNP",
+                       prevalence_outcome = NA)
+{
+  cols_exposure <- c(col_pvalues_exposure,
+                    col_N_exposure,
+                    col_MAF_exposure,
+                    col_beta_exposure,
+                    col_se_exposure,
+                    col_snp_exposure)
+  cols_exposure <- cols_exposure[!is.na(cols_exposure)]
+  
+  cols_outcome <- c(col_pvalues_outcome,
+                    col_N_outcome,
+                    col_MAF_outcome,
+                    col_beta_outcome,
+                    col_se_outcome,
+                    col_snp_outcome)
+  cols_outcome <- cols_outcome[!is.na(cols_outcome)]
+  
+  stopifnot(all(cols_exposure %in% names(exposure_dat)))
+  stopifnot(all(cols_outcome %in% names(outcome_dat)))
+  
+  snp_overlap <- intersect(exposure_dat[[col_snp_exposure]],
+                           outcome_dat[[col_snp_outcome]])
+  snp_overlap <- unique(snp_overlap)
+  
+  exposure_dat <- exposure_dat[exposure_dat[[col_snp_exposure]] %in% snp_overlap,]
+  outcome_dat <- outcome_dat[outcome_dat[[col_snp_outcome]] %in% snp_overlap,]
+  
+  exposure_dat <- exposure_dat[order(exposure_dat[[col_snp_exposure]]),]
+  outcome_dat <- outcome_dat[order(outcome_dat[[col_snp_outcome]]),]
+  
+  exposure_list <- list()
+  outcome_list <- list()
+  
+  for (i in 1:8) {
+    list_element <- c("pvalues","N","MAF",
+                      "beta","varbeta","snps",
+                      "type","sdY")[i]
+    col_element <- c(col_pvalues_exposure, col_N_exposure, col_MAF_exposure,
+                     col_beta_exposure, col_se_exposure, col_snp_exposure,
+                     type_exposure, sd_exposure)[i]
+    if(!is.na(col_element)){
+      if(list_element %in% c("type","sdY"))
+      {
+        if(list_element=="sdY") col_element <- as.numeric(col_element)
+        exposure_list[[list_element]] <- col_element
+      }
+      else
+      {
+        if(list_element == "varbeta")
+        {
+          exposure_list[[list_element]] <- exposure_dat[[col_element]]*exposure_dat[[col_element]]
+        }
+        else
+        {
+          exposure_list[[list_element]] <- exposure_dat[[col_element]]
+        }
+      }
+    }
+  }
+  
+  for (j in 1:8) {
+    list_element <- c("pvalues","N","MAF",
+                      "beta","varbeta","snps",
+                      "type","s")[j]
+    col_element <- c(col_pvalues_outcome, col_N_outcome, col_MAF_outcome,
+                     col_beta_outcome, col_se_outcome, col_snp_outcome,
+                     type_outcome, prevalence_outcome)[j]
+    if(!is.na(col_element)){
+      if(list_element %in% c("type","s"))
+      {
+        if(list_element=="s") col_element <- as.numeric(col_element)
+        outcome_list[[list_element]] <- col_element
+      }
+      else
+      {
+        if(list_element == "varbeta")
+        {
+          outcome_list[[list_element]] <- outcome_dat[[col_element]]*outcome_dat[[col_element]]
+        }
+        else
+        {
+          outcome_list[[list_element]] <- outcome_dat[[col_element]]
+        }
+      }
+    }
+  }
+  
+  coloc::coloc.abf(exposure_list,outcome_list, p1 = 1e-04, p2 = 1e-04,p12 = 1e-05)
 }
 
-coloc_exp_results=as.data.frame(coloc_exp_scz_results)
-##########################################################################################
+
+coloc_plot <- function(exposure_dat = coloc_SLAF7_dat,
+                       exposure = "SLAF7",
+                       col_snp_exposure = "SNP",
+                       col_pvalues_exposure = "pval",
+                       outcome_dat = coloc_MS_dat,
+                       outcome = "MS",
+                       col_snp_outcome = "SNP",
+                       col_pvalues_outcome = "pval.outcome",
+                       path = getwd(),
+                       combine = FALSE)
+{
+  library(locuscomparer)
+  
+  snp_overlap <- intersect(exposure_dat[[col_snp_exposure]],
+                           outcome_dat[[col_snp_outcome]])
+  snp_overlap <- unique(snp_overlap)
+  
+  exposure_dat <- exposure_dat[exposure_dat[[col_snp_exposure]] %in% snp_overlap,]
+  outcome_dat <- outcome_dat[outcome_dat[[col_snp_outcome]] %in% snp_overlap,]
+  
+  exposure_dat <- exposure_dat[order(exposure_dat[[col_snp_exposure]]),]
+  outcome_dat <- outcome_dat[order(outcome_dat[[col_snp_outcome]]),]
+  
+  exposure_dat <- data.frame(
+    rsid = exposure_dat[[col_snp_exposure]],
+    pval = exposure_dat[[col_pvalues_exposure]])
+  
+  outcome_dat <- data.frame(
+    rsid = outcome_dat[[col_snp_outcome]],
+    pval = outcome_dat[[col_pvalues_outcome]])
+  
+  write.table(exposure_dat,paste0(path,"/exposure_test.tsv"),sep = "\t",row.names = F,quote = F)
+  write.table(outcome_dat,paste0(path,"/outcome_test.tsv"),sep = "\t",row.names = F,quote = F)
+  p <- locuscompare(in_fn1 = paste0(path,"/outcome_test.tsv"), 
+                                   in_fn2 = paste0(path,"/exposure_test.tsv"), 
+                                   title1 = paste0(outcome," GWAS"),
+                                   title2 = paste0(exposure," pQTL"),
+                    combine = combine)
+  p
+}
