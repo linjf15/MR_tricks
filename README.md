@@ -21,3 +21,6 @@ During the study based on Mendelian Randomization, several functions were propos
 * colocolization
 * TWAS
 * ...
+
+## Useful references
+* [Usage of ieugwasr](https://mrcieu.github.io/ieugwasr/articles/)
