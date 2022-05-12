@@ -24,3 +24,6 @@ During the study based on Mendelian Randomization, several functions were propos
 
 ## Useful references
 * [Usage of ieugwasr](https://mrcieu.github.io/ieugwasr/articles/)
+* [FinnGen](https://finngen.gitbook.io/documentation/)
+* [UK Biobank Lee Lab](https://www.leelabsg.org/resources Details)
+* [MR dictionary](https://mr-dictionary.mrcieu.ac.uk/)
