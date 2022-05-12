@@ -1,6 +1,9 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+This is a modified copy from [Fang Li](https://hanruizhang.github.io/GWAS-eQTL-Colocalization/).
+
 ### 1. The purpose of GWAS-eQTL intergration
 * Is the my variant an eQTL?
 * Is the leading variant of the GWAS and eQTL signal the same?
