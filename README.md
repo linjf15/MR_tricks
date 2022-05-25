@@ -25,5 +25,5 @@ During the study based on Mendelian Randomization, several functions were propos
 ## Useful references
 * [MR dictionary](https://mr-dictionary.mrcieu.ac.uk/)
 * Cohorts: [FinnGen](https://finngen.gitbook.io/documentation/), [UK Biobank](https://www.leelabsg.org/resources)
-* Algorithm: [MR-RAPS](https://github.com/qingyuanzhao/mr.raps), [MR-PRESSO](https://github.com/rondolab/MR-PRESSO), [MR-Mix](https://github.com/gqi/MRMix), [MR-GENIUS](https://github.com/bluosun/MR-GENIUS), [MR-AID](https://github.com/yuanzhongshang/MRAID), [MR-TRYX](https://github.com/explodecomputer/tryx), [NLMR](https://github.com/jrs95/nlmr), [MVMR](https://github.com/WSpiller/MVMR), [BayesMR](https://github.com/igbucur/BayesMR), [CFMR](https://github.com/william-denault/CFMR)
+* Algorithm: [MR-RAPS](https://github.com/qingyuanzhao/mr.raps), [MR-PRESSO](https://github.com/rondolab/MR-PRESSO), [MR-Mix](https://github.com/gqi/MRMix), [MR-GENIUS](https://github.com/bluosun/MR-GENIUS), [MR-AID](https://github.com/yuanzhongshang/MRAID), [MR-TRYX](https://github.com/explodecomputer/tryx), [NLMR](https://github.com/jrs95/nlmr), [MVMR](https://github.com/WSpiller/MVMR), [BayesMR](https://github.com/igbucur/BayesMR), [CFMR](https://github.com/william-denault/CFMR), [OMR](https://github.com/wanglu205/OMR)
 * Packages: [ieugwasr](https://mrcieu.github.io/ieugwasr/articles/)
