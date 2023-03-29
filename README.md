@@ -1,6 +1,9 @@
 # Post-GWAS analysis and Mendelian Randomization
 During the study based on Mendelian Randomization, several functions were proposed to solve several common problems, including: 
 
+## Special note
+Recently, I noticed that some uploaders in Bilibili seem to sell my codes, such as [Shining94](https://space.bilibili.com/295917932/). The original purpose of this project is to share my solutions to certain problems in Mendelian Randomization without charge. I urge those guys stop selling my codes.
+
 ## Preprocessing for exposure GWASs
 * how to get rsID from chromosome and position: `get_rsID_from_chr_pos`
 * how to find allele frequency, proxy of a given SNP: `snp_add_eaf`, `snp_add_eaf_manual`,`find_proxy`
