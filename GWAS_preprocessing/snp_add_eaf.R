@@ -9,7 +9,7 @@ snp_add_eaf <- function(dat, build = "37", pop = "EUR")
   
   snp_reverse_base <- function(x)
   {
-    x <- str_to_upper(x)
+    x <- stringr::str_to_upper(x)
     stopifnot(x %in% c("A","T","C","G"))
     switch(x,"A"="T","T"="A","C"="G","G"="C")
   }
