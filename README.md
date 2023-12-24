@@ -3,6 +3,7 @@ During the study based on Mendelian Randomization, several functions were propos
 
 ## Special note
 Recently, I noticed that some uploaders in Bilibili seem to sell my codes. The original purpose of this project is to share my solutions to certain problems in Mendelian Randomization without charge. I urge those guys stop selling my codes, and I decide to not share my recent findings on MR. If you have any questions, leave me a message.
+Additionally, students from the Department of Neurology, Xiangya Hospital are not allowed to use my codes.
 
 ## Preprocessing for exposure GWASs
 * how to get rsID from chromosome and position: `get_rsID_from_chr_pos`
